@@ -81,11 +81,33 @@ public class RegistroDeNotas {
                 case 3:
 
                     break;
-                default:
-
+                case 4:
+                    int cualAlumno,
+                     confirmacion;
+                    do {
+                        cualAlumno = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de estudiante que quiere dar de baja"));
+                    } while (cualAlumno > estudiantes || cualAlumno <= 0);
+                    confirmacion = Integer.parseInt(JOptionPane.showInputDialog("Seguro que desea dar de baja a: " + notas[(cualAlumno - 1)][0] + "\n1 - Confirmar\nOtro numero para rechazar"));
+                    if (confirmacion == 1) {
+                        for (int periodoN = 1; periodoN < 5; periodoN++) {
+                            notas[(cualAlumno - 1)][periodoN] = 0.0 + "";
+                        }
+                        try {
+                            FileWriter filew = new FileWriter(archivo);
+                            BufferedWriter buffer = new BufferedWriter(filew);
+                            buffer.write("");
+                            for (int i = 0; i < estudiantes; i++) {
+                                buffer.write(notas[i][0] + "-" + notas[i][1] + "-" + notas[i][2] + "-" + notas[i][3] + "-" + notas[i][4]);
+                                buffer.newLine();
+                            }
+                            buffer.close();
+                        } catch (IOException ex) {
+                            System.out.println("Error: " + ex.getMessage());
+                        }
+                    }
                     break;
             }
-        } while (menu >= 1 && menu <= 3);
+        } while (menu >= 1 && menu <= 4);
     }
 
 }
