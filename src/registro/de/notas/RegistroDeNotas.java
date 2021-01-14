@@ -70,7 +70,7 @@ public class RegistroDeNotas {
                         BufferedWriter buffer = new BufferedWriter(filew);
                         buffer.write("");
                         for (int i = 0; i < estudiantes; i++) {
-                            buffer.write(notas[i][0] + "-" + notas[i][1] + "-" + notas[i][2] + "-" + notas[i][3] + "-" + notas[i][4] + "-" + notas[i][5]);
+                            buffer.write(notas[i][0] + "-" + notas[i][1] + "-" + notas[i][2] + "-" + notas[i][3] + "-" + notas[i][4]);
                             buffer.newLine();
                         }
                         buffer.close();
