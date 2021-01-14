@@ -16,6 +16,9 @@ public class RegistroDeNotas {
         String path;
         String notas[][] = new String[100][5];
         JTextArea pantalla = new JTextArea();
+        int cualAlumno,
+                confirmacion,
+                cualPeriodo;
 
         path = JOptionPane.showInputDialog("Ingrese la ruta de su archivo de notas\nRecuende que las plcas inversas deben ser escritas de esta manera \\\\");
         File archivo = new File(path);
@@ -37,7 +40,8 @@ public class RegistroDeNotas {
                 System.out.println("Error: " + ex.getMessage());
             }
 
-            menu = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de la opcion que desea\n1 - Ver record de notas\n2 - Agregar nuevo Estudiante\n3 - Modificar nota de usuario\n4 - Dar de baja a periodo"));
+            menu = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de la opcion que desea\n1 - Ver record de notas\n2 - Agregar nuevo Estudiante\n"
+                    + "3 - Modificar nota de usuario\n4 - Dar de baja a estudiante\nOtro numero para salir"));
             switch (menu) {
                 case 1:
                     if (estudiantes > 0) {
@@ -79,15 +83,47 @@ public class RegistroDeNotas {
                     }
                     break;
                 case 3:
+                    double nuevaNota;
+                    do {
+                        cualAlumno = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de estudiante que quiere cambiar la nota"));
+                    } while (cualAlumno > estudiantes || cualAlumno <= 0);
+                    do {
+                        cualPeriodo = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero del periodo que quiere cambiar la nota"));
+                    } while (cualPeriodo > 4 || cualPeriodo <= 0);
+                    if ((Double.parseDouble(notas[cualAlumno - 1][cualPeriodo])) == 10.0) {
+                        JOptionPane.showMessageDialog(null, "No se puede cambiar la nota por que el estudiante:\n" + notas[(cualAlumno - 1)][0] + " \ntiene 10.0 de calificacion");
+                    } else {
+                        do {
+                            nuevaNota = Double.parseDouble(JOptionPane.showInputDialog("ingrese la nueva nota para el estudiante \n" + notas[(cualAlumno - 1)][0] + "\n"
+                                    + "Recuerde que no puede disminuir su nota actual la cual es de: "
+                                    + notas[cualAlumno - 1][cualPeriodo]));
+                        } while (nuevaNota > 10.0 || nuevaNota < (Double.parseDouble(notas[cualAlumno - 1][cualPeriodo])));
+                        confirmacion = Integer.parseInt(JOptionPane.showInputDialog("Seguro que desea cambiar la nota a: " + notas[(cualAlumno - 1)][0] + "\n1 - Confirmar\n"
+                                + "Otro numero para rechazar"));
+                        if (confirmacion == 1) {
+                            notas[cualAlumno - 1][cualPeriodo] = nuevaNota + "";
+                            try {
+                                FileWriter filew = new FileWriter(archivo);
+                                BufferedWriter buffer = new BufferedWriter(filew);
+                                buffer.write("");
+                                for (int i = 0; i < estudiantes; i++) {
+                                    buffer.write(notas[i][0] + "-" + notas[i][1] + "-" + notas[i][2] + "-" + notas[i][3] + "-" + notas[i][4]);
+                                    buffer.newLine();
+                                }
+                                buffer.close();
+                            } catch (IOException ex) {
+                                System.out.println("Error: " + ex.getMessage());
+                            }
+                        }
+                    }
 
                     break;
                 case 4:
-                    int cualAlumno,
-                     confirmacion;
                     do {
                         cualAlumno = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de estudiante que quiere dar de baja"));
                     } while (cualAlumno > estudiantes || cualAlumno <= 0);
-                    confirmacion = Integer.parseInt(JOptionPane.showInputDialog("Seguro que desea dar de baja a: " + notas[(cualAlumno - 1)][0] + "\n1 - Confirmar\nOtro numero para rechazar"));
+                    confirmacion = Integer.parseInt(JOptionPane.showInputDialog("Seguro que desea dar de baja a: " + notas[(cualAlumno - 1)][0] + "\n1 - Confirmar\n"
+                            + "Otro numero para rechazar"));
                     if (confirmacion == 1) {
                         for (int periodoN = 1; periodoN < 5; periodoN++) {
                             notas[(cualAlumno - 1)][periodoN] = 0.0 + "";
